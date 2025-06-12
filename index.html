@@ -1,0 +1,142 @@
+<link rel="stylesheet" href="styles.css" />
+<div class="form-container">
+  <div class="form-wrapper">
+    <!-- Step 1: Personal Information -->
+    <div class="form-step active" id="step-1">
+      <div class="form-content">
+        <div class="input-row">
+          <div class="input-group">
+            <label for="first-name">First name</label>
+            <input type="text" id="first-name" name="firstname" placeholder="First name" required />
+          </div>
+          <div class="input-group">
+            <label for="last-name">Last name</label>
+            <input type="text" id="last-name" name="lastname" placeholder="Last name" required />
+          </div>
+        </div>
+        <div class="input-row">
+          <div class="input-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Email" required />
+          </div>
+          <div class="input-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="Phone Number" required />
+          </div>
+        </div>
+        <button class="next-btn" onclick="nextStep(1)">Next</button>
+        <p class="disclaimer">*No hard checks to your credit. Credit score provided by Experian.</p>
+      </div>
+    </div>
+
+    <!-- Step 2: Company Information -->
+    <div class="form-step" id="step-2">
+      <div class="form-content">
+        <div class="input-group">
+          <label for="company-name">Company Name</label>
+          <input type="text" id="company-name" name="company" placeholder="Company Name" required />
+        </div>
+        <div class="input-group">
+          <label for="federal-tax-id">Federal Tax ID</label>
+          <select id="federal-tax-id" name="federal_tax_id_available" required>
+            <option value="" disabled selected>Please select an option</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+        <button class="next-btn" onclick="nextStep(2)">Next</button>
+        <p class="disclaimer">*No hard checks to your credit. Credit score provided by Experian.</p>
+      </div>
+    </div>
+
+    <!-- Step 3: Online Sales -->
+    <div class="form-step" id="step-3">
+      <div class="form-content">
+        <h2>Do you sell online?</h2>
+        <div class="button-group">
+          <button class="option-btn" data-value="yes" onclick="selectOption(this, 'ecommerce_seller')">Yes</button>
+          <button class="option-btn" data-value="no" onclick="selectOption(this, 'ecommerce_seller')">No</button>
+        </div>
+        <button class="next-btn" onclick="nextStep(3)">Next</button>
+        <p class="disclaimer">*No hard checks to your credit. Credit score provided by Experian.</p>
+      </div>
+    </div>
+
+    <!-- Step 4: Primary Selling Platform -->
+    <div class="form-step" id="step-4">
+      <div class="form-content">
+        <h2>Where do you primarily sell?</h2>
+        <div class="platform-grid">
+          <button class="platform-btn" data-value="Amazon" onclick="togglePlatform(this)">
+            <img src="https://cdn.prod.website-files.com/64950fd5ee1d311f281adf40/684a45ebb2e8d8efc78841ab_Amazon.svg" alt="Amazon" />
+          </button>
+          <button class="platform-btn" data-value="Shopify" onclick="togglePlatform(this)">
+            <img src="https://cdn.prod.website-files.com/64950fd5ee1d311f281adf40/684a45eb21efa961555553bf_Shopify.svg" alt="Shopify" />
+          </button>
+          <button class="platform-btn" data-value="Walmart" onclick="togglePlatform(this)">
+            <img src="https://cdn.prod.website-files.com/64950fd5ee1d311f281adf40/684a45ebd04ce4d3f703e206_Walmart.svg" alt="Walmart" />
+          </button>
+          <button class="platform-btn" data-value="Bigcommerce" onclick="togglePlatform(this)">
+            <img src="https://cdn.prod.website-files.com/64950fd5ee1d311f281adf40/684a45eb9979d86562499480_BigCommerce.svg" alt="BigCommerce" />
+          </button>
+          <button class="platform-btn" data-value="WooCommerce" onclick="togglePlatform(this)">
+            <img src="https://cdn.prod.website-files.com/64950fd5ee1d311f281adf40/684a45eb7bae9f2d9f0de8bc_woocommerce.svg" alt="WooCommerce" />
+          </button>
+          <button class="platform-btn" data-value="Squarespace" onclick="togglePlatform(this)">
+            <img src="https://cdn.prod.website-files.com/64950fd5ee1d311f281adf40/684a45ebfe58b356308f17da_Squarespace.svg" alt="Squarespace" />
+          </button>
+        </div>
+        <!-- Hidden checkboxes for HubSpot integration -->
+        <div style="display: none">
+          <input type="checkbox" name="selling_channels__c" value="Amazon" id="amazon-checkbox" />
+          <input type="checkbox" name="selling_channels__c" value="Shopify" id="shopify-checkbox" />
+          <input type="checkbox" name="selling_channels__c" value="Walmart" id="walmart-checkbox" />
+          <input type="checkbox" name="selling_channels__c" value="Bigcommerce" id="bigcommerce-checkbox" />
+          <input type="checkbox" name="selling_channels__c" value="WooCommerce" id="woocommerce-checkbox" />
+          <input type="checkbox" name="selling_channels__c" value="Squarespace" id="squarespace-checkbox" />
+        </div>
+        <div class="input-group">
+          <input type="text" id="other-platform" name="other_online_sales_channels" placeholder="Other" class="other-input" />
+        </div>
+        <!-- Hidden inputs for form state -->
+        <input type="hidden" name="ecommerce_seller" id="ecommerce-seller-hidden" />
+        <button class="next-btn" onclick="nextStep(4)">Next</button>
+        <p class="disclaimer">*No hard checks to your credit. Credit score provided by Experian.</p>
+      </div>
+    </div>
+
+    <!-- Step 5: Monthly Revenue -->
+    <div class="form-step" id="step-5">
+      <div class="form-content">
+        <h2>What's your monthly revenue?</h2>
+        <div class="input-group">
+          <div class="currency-input">
+            <span class="currency-symbol">$</span>
+            <input type="text" id="monthly-revenue" name="user_reported_monthly_revenue" placeholder="10,000" required />
+          </div>
+        </div>
+        <button class="submit-btn" onclick="submitForm()">Generate My Free Credit Report</button>
+        <p class="disclaimer">*No hard checks to your credit. Credit score provided by Experian.</p>
+      </div>
+    </div>
+
+    <!-- Step 6: Success -->
+    <div class="form-step" id="step-6">
+      <div class="form-content">
+        <div class="success-icon">
+          <svg fill="none" preserveAspectRatio="none" viewBox="0 0 48 48">
+            <g>
+              <rect fill="rgba(118, 251, 142, 0.5)" height="48" rx="24" width="48" />
+              <path d="M10.5 23.58L18.7703 31.5L36 15" stroke="#177A33" stroke-width="4" />
+            </g>
+          </svg>
+        </div>
+        <h2>Will be in touch with your free business credit report shortly!</h2>
+        <p class="disclaimer">*No hard checks to your credit. Credit score provided by Experian.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script src="ga4-tracking.js"></script>
