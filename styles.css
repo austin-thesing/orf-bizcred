@@ -100,6 +100,10 @@
   margin-bottom: 1rem;
 }
 
+.bizcred-form-container .bizcred-input-row .bizcred-input-group {
+  margin-bottom: 0;
+}
+
 @media (max-width: 30rem) {
   .bizcred-form-container .bizcred-input-row {
     grid-template-columns: 1fr;
@@ -121,7 +125,7 @@
   padding: 0.75rem 0.875rem;
   border: 1px solid #ddd;
   border-radius: 0.5rem;
-  font-size: 0.75rem;
+  font-size: 1rem;
   font-weight: 400;
   transition: 0.3s;
   background: #fff;
@@ -150,7 +154,7 @@
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23797979' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
   background-position: right 0.75rem center;
   background-repeat: no-repeat;
-  background-size: 0.75rem;
+  background-size: 1rem;
   padding-right: 2rem;
 }
 
@@ -165,7 +169,7 @@
 .bizcred-form-container .bizcred-currency-symbol {
   position: absolute;
   left: 0.875rem;
-  font-size: 0.75rem;
+  font-size: 1rem;
   font-weight: 400;
   color: #797979;
   z-index: 1;
