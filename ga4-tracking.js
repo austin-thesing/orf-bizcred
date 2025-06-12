@@ -186,11 +186,11 @@ function trackFormConversion(formData) {
   trackGA4Event("credit_report_conversion", {
     total_duration_ms: totalDuration,
     total_duration_seconds: Math.round(totalDuration / 1000),
-    user_type: formData.sells_online === "yes" ? "online_seller" : "offline_business",
-    selling_platform: formData.primary_platform || formData.other_platform || "not_specified",
-    has_federal_tax_id: formData.federal_tax_id,
-    revenue_provided: !!formData.monthly_revenue,
-    revenue_range: getRevenueRange(formData.monthly_revenue),
+    user_type: formData.ecommerce_seller === "yes" ? "online_seller" : "offline_business",
+    selling_platform: formData.selling_channels__c?.join(", ") || formData.other_online_sales_channels || "not_specified",
+    has_federal_tax_id: formData.federal_tax_id_available,
+    revenue_provided: !!formData.user_reported_monthly_revenue,
+    revenue_range: getRevenueRange(formData.user_reported_monthly_revenue),
     completion_funnel: `${GA4_FORM_TRACKER.totalSteps}/${GA4_FORM_TRACKER.totalSteps}`,
     user_engagement_score: calculateEngagementScore(),
   });

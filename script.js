@@ -523,7 +523,7 @@ async function submitForm() {
       throw new Error(`HubSpot submission failed: ${errorMessage}`);
     }
 
-    trackFormConversion();
+    trackFormConversion(formData);
     showStep(6);
 
     window.dispatchEvent(
