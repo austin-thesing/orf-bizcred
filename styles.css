@@ -128,10 +128,6 @@
   transition: 0.3s;
   background: #fff;
   line-height: 1.4;
-  /* Prevent iOS zoom without font-size changes */
-  -webkit-text-size-adjust: 100%;
-  -webkit-appearance: none;
-  -webkit-user-select: text;
 }
 
 .bizcred-form-container .bizcred-input:focus {
