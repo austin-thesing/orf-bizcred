@@ -11,7 +11,7 @@
 .bizcred-form-container {
   font-family: "PP Mori", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "sans-serif";
   width: 100%;
-  max-width: 28.125rem;
+  max-width: 30.625rem;
   margin: 0 auto;
 }
 
@@ -89,7 +89,7 @@
 }
 
 .bizcred-form-container .bizcred-input-group {
-  margin-bottom: 1.125rem;
+  margin-bottom: 1rem;
   text-align: left;
 }
 
@@ -97,7 +97,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
 }
 
 @media (max-width: 30rem) {
