@@ -86,11 +86,11 @@ function setupEventListeners() {
     formData.email = e.target.value;
 
     // Clear any existing error styling
-    e.target.classList.remove("error");
+    e.target.classList.remove("bizcred-error");
 
     // Add real-time validation feedback
     if (e.target.value && !isValidEmail(e.target.value)) {
-      e.target.classList.add("error");
+      e.target.classList.add("bizcred-error");
     }
   });
 
@@ -242,12 +242,12 @@ function trackFormConversion() {
 
 function showStep(step) {
   // Hide all steps
-  document.querySelectorAll(".form-step").forEach((stepEl) => {
-    stepEl.classList.remove("active");
+  document.querySelectorAll(".bizcred-form-step").forEach((stepEl) => {
+    stepEl.classList.remove("bizcred-active");
   });
 
   // Show current step
-  document.getElementById(`step-${step}`).classList.add("active");
+  document.getElementById(`step-${step}`).classList.add("bizcred-active");
   currentStep = step;
 
   // Track step view
@@ -349,12 +349,12 @@ function validateStep(step) {
 
 function selectOption(button, field) {
   // Remove selected class from all buttons in the group
-  button.parentElement.querySelectorAll(".option-btn").forEach((btn) => {
-    btn.classList.remove("selected");
+  button.parentElement.querySelectorAll(".bizcred-option-btn").forEach((btn) => {
+    btn.classList.remove("bizcred-selected");
   });
 
   // Add selected class to clicked button
-  button.classList.add("selected");
+  button.classList.add("bizcred-selected");
 
   // Store the value
   formData[field] = button.dataset.value;
@@ -370,9 +370,9 @@ function togglePlatform(button) {
   const value = button.dataset.value;
 
   // Toggle selected state
-  if (button.classList.contains("selected")) {
+  if (button.classList.contains("bizcred-selected")) {
     // Remove from selection
-    button.classList.remove("selected");
+    button.classList.remove("bizcred-selected");
     formData.selling_channels__c = formData.selling_channels__c.filter((p) => p !== value);
 
     // Uncheck corresponding hidden checkbox
@@ -382,7 +382,7 @@ function togglePlatform(button) {
     }
   } else {
     // Add to selection
-    button.classList.add("selected");
+    button.classList.add("bizcred-selected");
     if (!formData.selling_channels__c.includes(value)) {
       formData.selling_channels__c.push(value);
     }
@@ -399,10 +399,10 @@ function togglePlatform(button) {
 
 function showError(message) {
   // Create or update error message
-  let errorEl = document.querySelector(".error-message");
+  let errorEl = document.querySelector(".bizcred-error-message");
   if (!errorEl) {
     errorEl = document.createElement("div");
-    errorEl.className = "error-message";
+    errorEl.className = "bizcred-error-message";
     errorEl.style.cssText = `
             color: #e53e3e;
             background: #fed7d7;
@@ -412,7 +412,7 @@ function showError(message) {
             font-size: 14px;
             text-align: center;
         `;
-    document.querySelector(".form-step.active .form-content").prepend(errorEl);
+    document.querySelector(".bizcred-form-step.bizcred-active .bizcred-form-content").prepend(errorEl);
   }
 
   errorEl.textContent = message;
@@ -431,11 +431,11 @@ async function submitForm() {
   }
 
   // Show loading state
-  const submitBtn = document.querySelector(".submit-btn");
+  const submitBtn = document.querySelector(".bizcred-submit-btn");
   const originalText = submitBtn.textContent;
   submitBtn.textContent = "Submitting...";
   submitBtn.disabled = true;
-  submitBtn.classList.add("loading");
+  submitBtn.classList.add("bizcred-loading");
 
   try {
     // Prepare form data for HubSpot
@@ -530,7 +530,7 @@ async function submitForm() {
     // Reset button state
     submitBtn.textContent = originalText;
     submitBtn.disabled = false;
-    submitBtn.classList.remove("loading");
+    submitBtn.classList.remove("bizcred-loading");
   }
 }
 
@@ -573,8 +573,8 @@ window.CreditReportForm = {
 
   // Set custom styling for Webflow
   setWebflowMode: function () {
-    document.body.classList.add("webflow-embed");
-    document.querySelector(".form-container").classList.add("webflow-embed");
+    document.body.classList.add("bizcred-webflow-embed");
+    document.querySelector(".bizcred-form-container").classList.add("bizcred-webflow-embed");
   },
 };
 

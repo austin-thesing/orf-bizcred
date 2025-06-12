@@ -61,7 +61,7 @@ async function build() {
     const inlineJS = `<script>${minifiedJS}</script>`;
 
     // Insert inline CSS after the first div or at the beginning of the content
-    processedHTML = processedHTML.replace(/(<div[^>]*class="form-container"[^>]*>)/, `${inlineCSS}\n$1`);
+    processedHTML = processedHTML.replace(/(<div[^>]*class="bizcred-form-container"[^>]*>)/, `${inlineCSS}\n$1`);
 
     // Insert inline JS at the end, just before the closing tag
     processedHTML = processedHTML + "\n" + inlineJS;
