@@ -1,120 +1,161 @@
-#!/usr/bin/env bun
+import fs from "fs/promises";
+import path from "path";
+import { minify } from "html-minifier-terser";
 
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
-import { minify as minifyHTML } from "html-minifier-terser";
-import CleanCSS from "clean-css";
-import { minify as minifyJS } from "terser";
-import { join } from "path";
-
-const BUILD_DIR = "dist";
-const OUTPUT_FILE = "webflow.html";
-
-// Ensure dist directory exists
-if (!existsSync(BUILD_DIR)) {
-  mkdirSync(BUILD_DIR, { recursive: true });
-}
+const isDev = process.argv.includes("--dev");
+const outDir = "dist";
+const mode = isDev ? "development" : "production";
+const suffix = isDev ? "-debug" : "";
 
 async function build() {
+  console.log(`Starting ${mode} build...`);
+
   try {
-    console.log("🚀 Starting build process...");
+    // 0. Clean output directory
+    await fs.rm(outDir, { recursive: true, force: true });
 
-    // Read source files
-    console.log("📖 Reading source files...");
-    const htmlContent = readFileSync("index.html", "utf-8");
-    const cssContent = readFileSync("styles.css", "utf-8");
-    const jsContent = readFileSync("script.js", "utf-8");
+    // 1. Ensure output directory exists and read source files
+    await fs.mkdir(outDir, { recursive: true });
+    const htmlTemplate = await fs.readFile("index.html", "utf-8");
 
-    // Minify CSS
-    console.log("🎨 Minifying CSS...");
-    const cleanCSS = new CleanCSS({
-      level: 2,
-      returnPromise: false,
-    });
-    const minifiedCSS = cleanCSS.minify(cssContent).styles;
+    // 2. Build CSS and JS using Bun
+    const [cssBuild, jsBuild, ga4Build] = await Promise.all([
+      Bun.build({
+        entrypoints: ["styles.css"],
+        minify: !isDev,
+      }),
+      Bun.build({
+        entrypoints: ["script.js"],
+        minify: isDev
+          ? false
+          : {
+              whitespace: true,
+              syntax: true,
+              identifiers: false,
+            },
+        define: {
+          "process.env.NODE_ENV": JSON.stringify(mode),
+        },
+      }),
+      Bun.build({
+        entrypoints: ["ga4-tracking.js"],
+        minify: isDev
+          ? false
+          : {
+              whitespace: true,
+              syntax: true,
+              identifiers: false,
+            },
+      }),
+    ]);
 
-    // Minify JavaScript (excluding GA4 as requested)
-    console.log("⚡ Minifying JavaScript...");
-    const minifiedJSResult = await minifyJS(jsContent, {
-      compress: {
-        drop_console: true,
-        dead_code: true,
-        unused: true,
-      },
-      mangle: true,
-      format: {
-        comments: false,
-      },
-    });
-    const minifiedJS = minifiedJSResult.code;
+    const cssContent = await cssBuild.outputs[0].text();
+    const jsContent = await jsBuild.outputs[0].text();
+    const ga4ScriptContent = await ga4Build.outputs[0].text();
 
-    // Process HTML: remove external CSS/JS references and inline everything
-    console.log("📄 Processing HTML...");
-    let processedHTML = htmlContent
-      // Remove CSS link
-      .replace(/<link[^>]*href="styles\.css"[^>]*>/gi, "")
-      // Remove script tags for script.js and ga4-tracking.js
-      .replace(/<script[^>]*src="script\.js"[^>]*><\/script>/gi, "")
-      .replace(/<script[^>]*src="ga4-tracking\.js"[^>]*><\/script>/gi, "");
+    // 3. Prepare the build comment header
+    const buildTimestamp = new Date().toISOString();
+    const buildComment = `<!-- 
+  Credit Report Form - ${isDev ? "DEV Build" : "Minified Build"}
+  Source repository: https://github.com/austin-thesing/orf-bizcred
+  Last built: ${buildTimestamp}
+  
+  For editing this form, please see the source files in the GitHub repository above.
+  ${isDev ? "This is a development build. Do not use in production." : "Do not edit this minified file directly."}
+-->`;
 
-    // Add minified CSS and JS inline
-    const inlineCSS = `<style>${minifiedCSS}</style>`;
-    const inlineJS = `<script>${minifiedJS}</script>`;
-
-    // Insert inline CSS after the first div or at the beginning of the content
-    processedHTML = processedHTML.replace(/(<div[^>]*class="bizcred-form-container"[^>]*>)/, `${inlineCSS}\n$1`);
-
-    // Insert inline JS at the end, just before the closing tag
-    processedHTML = processedHTML + "\n" + inlineJS;
-
-    // Minify the final HTML
-    console.log("🗜️  Minifying HTML...");
-    const minifiedHTML = await minifyHTML(processedHTML, {
+    // --- Minify Options ---
+    const minifyOptions = {
+      collapseWhitespace: true,
       removeComments: true,
       removeRedundantAttributes: true,
       removeScriptTypeAttributes: true,
       removeStyleLinkTypeAttributes: true,
       useShortDoctype: true,
-      collapseWhitespace: true,
-      conservativeCollapse: true,
       minifyCSS: true,
-      minifyJS: true,
-      removeEmptyAttributes: true,
-      removeOptionalTags: false, // Keep for Webflow compatibility
-      caseSensitive: false,
-    });
+      minifyJS: {
+        mangle: false,
+      },
+    };
 
-    // Add header comment with GitHub repo link
-    const headerComment = `<!-- 
-  Credit Report Form - Minified Build
-  Source repository: https://github.com/austin-thesing/orf-bizcred
-  Last built: ${new Date().toISOString()}
+    // --- OUTPUT 1: @webflow.html (Fully Combined HTML, CSS, JS) ---
+    let combinedHtml = htmlTemplate
+      .replace(/<link rel="stylesheet" href="styles.css"[^>]*>/, `<style>${cssContent}</style>`)
+      .replace(/<script src="script.js"><\/script>/, `<script>${jsContent}</script>`)
+      .replace(/<script src="ga4-tracking.js"><\/script>/, `<script>${ga4ScriptContent}</script>`);
+
+    // Wrap the content in a safe container for Webflow embedding
+    const webflowSafeHtml = `
+<!-- Credit Report Form Embed - Safe for Webflow -->
+<div id="bizcred-form-embed-container" style="width: 100%; max-width: 100%; overflow: hidden;">
+  ${combinedHtml}
+</div>
+<script>
+// Ensure the form doesn't interfere with existing page content
+(function() {
+  // Wait for DOM to be ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSafeEmbed);
+  } else {
+    initSafeEmbed();
+  }
   
-  For editing this form, please see the source files in the GitHub repository above.
-  Do not edit this minified file directly.
--->
-`;
+  function initSafeEmbed() {
+    // Ensure our form container exists and is properly isolated
+    const container = document.getElementById('bizcred-form-embed-container');
+    if (container) {
+      // Add isolation styles to prevent CSS conflicts
+      container.style.cssText += '; position: relative; z-index: 1; isolation: isolate;';
+      
+      // Ensure our form doesn't affect other page elements
+      const formContainer = container.querySelector('.bizcred-form-container');
+      if (formContainer) {
+        // Use targeted isolation instead of 'all: initial' which breaks page layout
+        formContainer.style.cssText += '; position: relative; z-index: auto;';
+      }
+    }
+  }
+})();
+</script>`;
 
-    // Write the output file with header comment
-    const outputPath = join(BUILD_DIR, OUTPUT_FILE);
-    const finalHTML = headerComment + minifiedHTML;
-    writeFileSync(outputPath, finalHTML, "utf-8");
+    if (!isDev) {
+      combinedHtml = await minify(webflowSafeHtml, minifyOptions);
+    } else {
+      combinedHtml = webflowSafeHtml;
+    }
 
-    // Calculate sizes
-    const originalSize = htmlContent.length + cssContent.length + jsContent.length;
-    const minifiedSize = finalHTML.length;
-    const compressionRatio = (((originalSize - minifiedSize) / originalSize) * 100).toFixed(1);
+    const webflowFilename = `@webflow${suffix}.html`;
+    const webflowPath = path.join(outDir, webflowFilename);
+    await fs.writeFile(webflowPath, `${buildComment}\n${combinedHtml}`);
+    console.log(`✅ Created Webflow embed file: ${webflowPath}`);
 
-    console.log("✅ Build completed successfully!");
-    console.log(`📊 Original size: ${(originalSize / 1024).toFixed(1)}KB`);
-    console.log(`📦 Minified size: ${(minifiedSize / 1024).toFixed(1)}KB`);
-    console.log(`🗜️  Compression: ${compressionRatio}% smaller`);
-    console.log(`📁 Output: ${outputPath}`);
-    console.log("\n🎉 Ready for Webflow! Copy the contents of dist/webflow.html into your Webflow embed element.");
+    // --- OUTPUT 2: @wf-htmlcss.html (HTML + CSS for Webflow) ---
+    let wfHtmlCssContent = htmlTemplate
+      .replace(/<link rel="stylesheet" href="styles.css"[^>]*>/, `<style>${cssContent}</style>`)
+      .replace(/<script src="script.js"><\/script>/, "")
+      .replace(/<script src="ga4-tracking.js"><\/script>/, "");
+
+    if (!isDev) {
+      wfHtmlCssContent = await minify(wfHtmlCssContent, minifyOptions);
+    }
+
+    const wfHtmlCssFilename = `@wf-htmlcss${suffix}.html`;
+    const wfHtmlCssPath = path.join(outDir, wfHtmlCssFilename);
+    await fs.writeFile(wfHtmlCssPath, `${buildComment}\n${wfHtmlCssContent}`);
+    console.log(`✅ Created HTML/CSS embed: ${wfHtmlCssPath}`);
+
+    // --- OUTPUT 3: @wf-scripts.html (JS for Webflow) ---
+    const wfScriptsContent = `<script>${jsContent}</script>\n<script>${ga4ScriptContent}</script>`;
+    const wfScriptsFilename = `@wf-scripts${suffix}.html`;
+    const wfScriptsPath = path.join(outDir, wfScriptsFilename);
+    await fs.writeFile(wfScriptsPath, `${buildComment}\n${wfScriptsContent}`);
+    console.log(`✅ Created scripts embed: ${wfScriptsPath}`);
+
+    console.log(`\n🎉 Build for ${mode} mode completed successfully!`);
   } catch (error) {
-    console.error("❌ Build failed:", error.message);
+    console.error("🚨 Build failed:", error);
     process.exit(1);
   }
 }
 
-// Run the build
 build();

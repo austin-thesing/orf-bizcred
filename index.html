@@ -7,24 +7,24 @@
         <div class="bizcred-input-row">
           <div class="bizcred-input-group">
             <label for="first-name">First name</label>
-            <input type="text" id="first-name" name="firstname" placeholder="First name" required />
+            <input type="text" id="first-name" name="firstname" placeholder="First name" required class="bizcred-input" />
           </div>
           <div class="bizcred-input-group">
             <label for="last-name">Last name</label>
-            <input type="text" id="last-name" name="lastname" placeholder="Last name" required />
+            <input type="text" id="last-name" name="lastname" placeholder="Last name" required class="bizcred-input" />
           </div>
         </div>
         <div class="bizcred-input-row">
           <div class="bizcred-input-group">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Email" required />
+            <input type="email" id="email" name="email" placeholder="Email" required class="bizcred-input" />
           </div>
           <div class="bizcred-input-group">
             <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" name="phone" placeholder="Phone Number" required />
+            <input type="tel" id="phone" name="phone" placeholder="Phone Number" required class="bizcred-input" />
           </div>
         </div>
-        <button class="bizcred-next-btn" onclick="nextStep(1)">Next</button>
+        <button class="bizcred-next-btn" onclick="window.bizCredForm.nextStep(1)">Next</button>
         <p class="bizcred-disclaimer">*No hard checks to your credit. Credit score provided by Experian.</p>
       </div>
     </div>
@@ -34,17 +34,17 @@
       <div class="bizcred-form-content">
         <div class="bizcred-input-group">
           <label for="company-name">Company Name</label>
-          <input type="text" id="company-name" name="company" placeholder="Company Name" required />
+          <input type="text" id="company-name" name="company" placeholder="Company Name" required class="bizcred-input" />
         </div>
         <div class="bizcred-input-group">
           <label for="federal-tax-id">Federal Tax ID</label>
-          <select id="federal-tax-id" name="federal_tax_id_available" required>
+          <select id="federal-tax-id" name="federal_tax_id_available" required class="bizcred-input">
             <option value="" disabled selected>Please select an option</option>
             <option value="yes">Yes</option>
             <option value="no">No</option>
           </select>
         </div>
-        <button class="bizcred-next-btn" onclick="nextStep(2)">Next</button>
+        <button class="bizcred-next-btn" onclick="window.bizCredForm.nextStep(2)">Next</button>
         <p class="bizcred-disclaimer">*No hard checks to your credit. Credit score provided by Experian.</p>
       </div>
     </div>
@@ -54,10 +54,10 @@
       <div class="bizcred-form-content">
         <h2>Do you sell online?</h2>
         <div class="bizcred-button-group">
-          <button class="bizcred-option-btn" data-value="yes" onclick="selectOption(this, 'ecommerce_seller')">Yes</button>
-          <button class="bizcred-option-btn" data-value="no" onclick="selectOption(this, 'ecommerce_seller')">No</button>
+          <button class="bizcred-option-btn" data-value="yes" onclick="window.bizCredForm.selectOption(this, 'ecommerce_seller')">Yes</button>
+          <button class="bizcred-option-btn" data-value="no" onclick="window.bizCredForm.selectOption(this, 'ecommerce_seller')">No</button>
         </div>
-        <button class="bizcred-next-btn" onclick="nextStep(3)">Next</button>
+        <button class="bizcred-next-btn" onclick="window.bizCredForm.nextStep(3)">Next</button>
         <p class="bizcred-disclaimer">*No hard checks to your credit. Credit score provided by Experian.</p>
       </div>
     </div>
@@ -67,22 +67,22 @@
       <div class="bizcred-form-content">
         <h2>Where do you primarily sell?</h2>
         <div class="bizcred-platform-grid">
-          <button class="bizcred-platform-btn" data-value="Amazon" onclick="togglePlatform(this)">
+          <button class="bizcred-platform-btn" data-value="Amazon" onclick="window.bizCredForm.togglePlatform(this)">
             <img src="https://cdn.prod.website-files.com/64950fd5ee1d311f281adf40/684a45ebb2e8d8efc78841ab_Amazon.svg" alt="Amazon" />
           </button>
-          <button class="bizcred-platform-btn" data-value="Shopify" onclick="togglePlatform(this)">
+          <button class="bizcred-platform-btn" data-value="Shopify" onclick="window.bizCredForm.togglePlatform(this)">
             <img src="https://cdn.prod.website-files.com/64950fd5ee1d311f281adf40/684a45eb21efa961555553bf_Shopify.svg" alt="Shopify" />
           </button>
-          <button class="bizcred-platform-btn" data-value="Walmart" onclick="togglePlatform(this)">
+          <button class="bizcred-platform-btn" data-value="Walmart" onclick="window.bizCredForm.togglePlatform(this)">
             <img src="https://cdn.prod.website-files.com/64950fd5ee1d311f281adf40/684a45ebd04ce4d3f703e206_Walmart.svg" alt="Walmart" />
           </button>
-          <button class="bizcred-platform-btn" data-value="Bigcommerce" onclick="togglePlatform(this)">
+          <button class="bizcred-platform-btn" data-value="Bigcommerce" onclick="window.bizCredForm.togglePlatform(this)">
             <img src="https://cdn.prod.website-files.com/64950fd5ee1d311f281adf40/684a45eb9979d86562499480_BigCommerce.svg" alt="BigCommerce" />
           </button>
-          <button class="bizcred-platform-btn" data-value="WooCommerce" onclick="togglePlatform(this)">
+          <button class="bizcred-platform-btn" data-value="WooCommerce" onclick="window.bizCredForm.togglePlatform(this)">
             <img src="https://cdn.prod.website-files.com/64950fd5ee1d311f281adf40/684a45eb7bae9f2d9f0de8bc_woocommerce.svg" alt="WooCommerce" />
           </button>
-          <button class="bizcred-platform-btn" data-value="Squarespace" onclick="togglePlatform(this)">
+          <button class="bizcred-platform-btn" data-value="Squarespace" onclick="window.bizCredForm.togglePlatform(this)">
             <img src="https://cdn.prod.website-files.com/64950fd5ee1d311f281adf40/684a45ebfe58b356308f17da_Squarespace.svg" alt="Squarespace" />
           </button>
         </div>
@@ -96,11 +96,11 @@
           <input type="checkbox" name="selling_channels__c" value="Squarespace" id="squarespace-checkbox" />
         </div>
         <div class="bizcred-input-group">
-          <input type="text" id="other-platform" name="other_online_sales_channels" placeholder="Other" class="bizcred-other-input" />
+          <input type="text" id="other-platform" name="other_online_sales_channels" placeholder="Other" class="bizcred-other-input bizcred-input" />
         </div>
         <!-- Hidden inputs for form state -->
         <input type="hidden" name="ecommerce_seller" id="ecommerce-seller-hidden" />
-        <button class="bizcred-next-btn" onclick="nextStep(4)">Next</button>
+        <button class="bizcred-next-btn" onclick="window.bizCredForm.nextStep(4)">Next</button>
         <p class="bizcred-disclaimer">*No hard checks to your credit. Credit score provided by Experian.</p>
       </div>
     </div>
@@ -112,10 +112,10 @@
         <div class="bizcred-input-group">
           <div class="bizcred-currency-input">
             <span class="bizcred-currency-symbol">$</span>
-            <input type="text" id="monthly-revenue" name="user_reported_monthly_revenue" placeholder="10,000" required />
+            <input type="text" id="monthly-revenue" name="user_reported_monthly_revenue" placeholder="10,000" required class="bizcred-input" />
           </div>
         </div>
-        <button class="bizcred-submit-btn" onclick="submitForm()">Generate My Free Credit Report</button>
+        <button class="bizcred-submit-btn" onclick="window.bizCredForm.submitForm()">Generate My Free Credit Report</button>
         <p class="bizcred-disclaimer">*No hard checks to your credit. Credit score provided by Experian.</p>
       </div>
     </div>

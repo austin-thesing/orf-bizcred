@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Webflow Embed</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .existing-content {
+        background: white;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .embed-section {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="existing-content">
+      <h1>Existing Page Content</h1>
+      <p>This is some existing content on the page that should not be affected by the embedded form.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+
+    <div class="embed-section">
+      <h2>Embedded Credit Report Form</h2>
+      <!-- This is where the Webflow embed would go -->
+      <div id="form-embed-area">
+        <!-- The content from @webflow-debug.html would be pasted here -->
+      </div>
+    </div>
+
+    <div class="existing-content">
+      <h2>More Existing Content</h2>
+      <p>This content should also remain unaffected by the form embed.</p>
+      <ul>
+        <li>List item 1</li>
+        <li>List item 2</li>
+        <li>List item 3</li>
+      </ul>
+    </div>
+
+    <script>
+      // Test script to verify the form doesn't interfere
+      console.log("Page loaded successfully");
+
+      // Simulate checking for the HubSpot cookie issue
+      function testCookieFunction() {
+        try {
+          if (!document.cookie) return "";
+          const match = document.cookie.match(/hubspotutk=([^;]+)/);
+          return match && match[1] ? match[1] : "";
+        } catch (error) {
+          console.warn("Error reading HubSpot cookie:", error);
+          return "";
+        }
+      }
+
+      console.log("Cookie test result:", testCookieFunction());
+    </script>
+  </body>
+</html>

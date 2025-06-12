@@ -74,53 +74,77 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function setupEventListeners() {
   // Add input event listeners for real-time data collection
-  document.getElementById("first-name").addEventListener("input", function (e) {
-    formData.firstname = e.target.value;
-  });
+  const firstNameEl = document.getElementById("first-name");
+  if (firstNameEl) {
+    firstNameEl.addEventListener("input", function (e) {
+      formData.firstname = e.target.value;
+    });
+  }
 
-  document.getElementById("last-name").addEventListener("input", function (e) {
-    formData.lastname = e.target.value;
-  });
+  const lastNameEl = document.getElementById("last-name");
+  if (lastNameEl) {
+    lastNameEl.addEventListener("input", function (e) {
+      formData.lastname = e.target.value;
+    });
+  }
 
-  document.getElementById("email").addEventListener("input", function (e) {
-    formData.email = e.target.value;
+  const emailEl = document.getElementById("email");
+  if (emailEl) {
+    emailEl.addEventListener("input", function (e) {
+      formData.email = e.target.value;
 
-    // Clear any existing error styling
-    e.target.classList.remove("bizcred-error");
+      // Clear any existing error styling
+      e.target.classList.remove("bizcred-error");
 
-    // Add real-time validation feedback
-    if (e.target.value && !isValidEmail(e.target.value)) {
-      e.target.classList.add("bizcred-error");
-    }
-  });
+      // Add real-time validation feedback
+      if (e.target.value && !isValidEmail(e.target.value)) {
+        e.target.classList.add("bizcred-error");
+      }
+    });
+  }
 
-  document.getElementById("phone").addEventListener("input", function (e) {
-    formData.phone = e.target.value;
-  });
+  const phoneEl = document.getElementById("phone");
+  if (phoneEl) {
+    phoneEl.addEventListener("input", function (e) {
+      formData.phone = e.target.value;
+    });
+  }
 
-  document.getElementById("company-name").addEventListener("input", function (e) {
-    formData.company = e.target.value;
-  });
+  const companyEl = document.getElementById("company-name");
+  if (companyEl) {
+    companyEl.addEventListener("input", function (e) {
+      formData.company = e.target.value;
+    });
+  }
 
-  document.getElementById("federal-tax-id").addEventListener("change", function (e) {
-    formData.federal_tax_id_available = e.target.value;
-  });
+  const federalTaxIdEl = document.getElementById("federal-tax-id");
+  if (federalTaxIdEl) {
+    federalTaxIdEl.addEventListener("change", function (e) {
+      formData.federal_tax_id_available = e.target.value;
+    });
+  }
 
   // Monthly revenue with comma formatting
-  document.getElementById("monthly-revenue").addEventListener("input", function (e) {
-    const cleanValue = cleanCurrency(e.target.value);
-    const formattedValue = formatCurrency(cleanValue);
+  const monthlyRevenueEl = document.getElementById("monthly-revenue");
+  if (monthlyRevenueEl) {
+    monthlyRevenueEl.addEventListener("input", function (e) {
+      const cleanValue = cleanCurrency(e.target.value);
+      const formattedValue = formatCurrency(cleanValue);
 
-    // Update display value
-    e.target.value = formattedValue;
-    // Store clean value for HubSpot
-    formData.user_reported_monthly_revenue = cleanValue;
-  });
+      // Update display value
+      e.target.value = formattedValue;
+      // Store clean value for HubSpot
+      formData.user_reported_monthly_revenue = cleanValue;
+    });
+  }
 
-  document.getElementById("other-platform").addEventListener("input", function (e) {
-    formData.other_online_sales_channels = e.target.value;
-    // Keep existing platform selections when "other" is used
-  });
+  const otherPlatformEl = document.getElementById("other-platform");
+  if (otherPlatformEl) {
+    otherPlatformEl.addEventListener("input", function (e) {
+      formData.other_online_sales_channels = e.target.value;
+      // Keep existing platform selections when "other" is used
+    });
+  }
 }
 
 // GA4 Event Tracking Functions
@@ -398,7 +422,13 @@ function togglePlatform(button) {
 }
 
 function showError(message) {
-  // Create or update error message
+  // Find the active step
+  const activeStep = document.querySelector(".bizcred-form-step.bizcred-active .bizcred-form-content");
+  if (!activeStep) {
+    console.warn("Could not find active form step to show error");
+    return;
+  }
+
   let errorEl = document.querySelector(".bizcred-error-message");
   if (!errorEl) {
     errorEl = document.createElement("div");
@@ -412,175 +442,198 @@ function showError(message) {
             font-size: 14px;
             text-align: center;
         `;
-    document.querySelector(".bizcred-form-step.bizcred-active .bizcred-form-content").prepend(errorEl);
+    activeStep.prepend(errorEl);
   }
 
   errorEl.textContent = message;
 
   // Remove error after 3 seconds
   setTimeout(() => {
-    if (errorEl) {
+    if (errorEl && errorEl.parentNode) {
       errorEl.remove();
     }
   }, 3000);
 }
 
 async function submitForm() {
-  if (!validateStep(5)) {
-    return;
-  }
+  if (!validateStep(5)) return;
 
-  // Show loading state
   const submitBtn = document.querySelector(".bizcred-submit-btn");
-  const originalText = submitBtn.textContent;
+  const originalBtnText = submitBtn.textContent;
   submitBtn.textContent = "Submitting...";
   submitBtn.disabled = true;
   submitBtn.classList.add("bizcred-loading");
+  trackFormSubmission();
+
+  if (process.env.NODE_ENV === "development") {
+    console.log("--- HubSpot Submission Debug ---");
+    console.log("Current Step:", currentStep);
+    console.log("Form Data:", JSON.stringify(formData, null, 2));
+    console.log("HubSpot Config:", {
+      portalId: HUBSPOT_CONFIG.portalId,
+      formId: HUBSPOT_CONFIG.formId,
+      endpoint: HUBSPOT_CONFIG.endpoint,
+    });
+  }
 
   try {
-    // Prepare form data for HubSpot
-    const hubspotData = {
+    const hubspotPayload = {
       fields: [
-        {
-          objectTypeId: "0-1", // Contact object type
-          name: "firstname",
-          value: formData.firstname,
-        },
-        {
-          objectTypeId: "0-1",
-          name: "lastname",
-          value: formData.lastname,
-        },
-        {
-          objectTypeId: "0-1",
-          name: "email",
-          value: formData.email,
-        },
-        {
-          objectTypeId: "0-1",
-          name: "phone",
-          value: formData.phone,
-        },
-        {
-          objectTypeId: "0-1",
-          name: "company",
-          value: formData.company,
-        },
-        {
-          objectTypeId: "0-1",
-          name: "hs_tax_id",
-          value: formData.federal_tax_id_available,
-        },
-        {
-          objectTypeId: "0-1",
-          name: "sells_online",
-          value: formData.ecommerce_seller,
-        },
-        {
-          objectTypeId: "0-1",
-          name: "primary_selling_platform",
-          value: [...formData.selling_channels__c, formData.other_online_sales_channels].filter(Boolean).join(", "),
-        },
-        {
-          objectTypeId: "0-1",
-          name: "monthly_revenue",
-          value: formData.user_reported_monthly_revenue, // Clean value stored in formData
-        },
+        { name: "firstname", value: formData.firstname },
+        { name: "lastname", value: formData.lastname },
+        { name: "email", value: formData.email },
+        { name: "phone", value: formData.phone },
+        { name: "company", value: formData.company },
+        { name: "federal_tax_id_available", value: formData.federal_tax_id_available },
+        { name: "ecommerce_seller", value: formData.ecommerce_seller },
+        { name: "selling_channels__c", value: formData.selling_channels__c.join(";") },
+        { name: "other_online_sales_channels", value: formData.other_online_sales_channels },
+        { name: "user_reported_monthly_revenue", value: formData.user_reported_monthly_revenue },
       ],
       context: {
-        hutk: getHubSpotCookie(), // Get HubSpot tracking cookie if available
+        hutk: getHubSpotCookie(),
         pageUri: window.location.href,
         pageName: document.title,
       },
     };
 
-    // Submit to HubSpot
+    // Always log the payload in development for debugging
+    if (process.env.NODE_ENV === "development") {
+      console.log("Submitting to HubSpot with payload:", JSON.stringify(hubspotPayload, null, 2));
+    }
+
     const response = await fetch(HUBSPOT_CONFIG.endpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(hubspotData),
+      body: JSON.stringify(hubspotPayload),
     });
 
-    if (response.ok) {
-      // Success - show final step
-      showStep(6);
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({
+        message: `HTTP error ${response.status} with no JSON body.`,
+        errors: [],
+      }));
+      console.error("HubSpot API Error Response:", errorData);
 
-      // Optional: Track conversion event
-      if (typeof gtag !== "undefined") {
-        gtag("event", "conversion", {
-          send_to: "AW-CONVERSION_ID/CONVERSION_LABEL", // Replace with your conversion tracking
-        });
-      }
+      const validationErrors = errorData.errors?.map((err) => err.message).join(" ");
+      const errorMessage = validationErrors || errorData.message || "An unknown error occurred.";
 
-      // Optional: Fire custom event for other tracking
-      window.dispatchEvent(
-        new CustomEvent("formSubmitted", {
-          detail: formData,
-        })
-      );
-    } else {
-      throw new Error("Submission failed");
+      throw new Error(`HubSpot submission failed: ${errorMessage}`);
     }
-  } catch (error) {
-    console.error("Form submission error:", error);
-    showError("Something went wrong. Please try again.");
 
-    // Reset button state
-    submitBtn.textContent = originalText;
+    trackFormConversion();
+    showStep(6);
+
+    window.dispatchEvent(
+      new CustomEvent("formSubmitted", {
+        detail: formData,
+      })
+    );
+  } catch (error) {
+    console.error("HubSpot Submission Error:", error);
+    showError("Could not submit the form. Please try again.");
+  } finally {
     submitBtn.disabled = false;
+    submitBtn.textContent = originalBtnText;
     submitBtn.classList.remove("bizcred-loading");
   }
 }
 
-// Helper function to get HubSpot tracking cookie
+/**
+ * Reads the HubSpot user token cookie (hubspotutk).
+ * @returns {string} The user token or an empty string if not found.
+ */
 function getHubSpotCookie() {
-  const match = document.cookie.match(/hubspotutk=([^;]+)/);
-  return match ? match[1] : "";
+  try {
+    if (!document.cookie) return "";
+    const match = document.cookie.match(/hubspotutk=([^;]+)/);
+    return match && match[1] ? match[1] : "";
+  } catch (error) {
+    console.warn("Error reading HubSpot cookie:", error);
+    return "";
+  }
 }
 
 // Alternative submission method for testing without HubSpot
 async function submitFormFallback() {
-  console.log("Form Data:", formData);
-
-  // Simulate API call
+  if (process.env.NODE_ENV === "development") {
+    console.log("Fallback submission triggered for testing.");
+  }
   await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  // Show success step
   showStep(6);
 }
 
-// Webflow integration helpers
+// --- GLOBAL API & INITIALIZATION ---
+
+/**
+ * The primary initialization function.
+ * Can be called automatically or manually with a config.
+ */
+function initializeCreditForm(config = {}) {
+  // Prevent re-initialization
+  if (window.creditFormInitialized) return;
+
+  // Override HubSpot config if provided via manual call
+  if (config.portalId) HUBSPOT_CONFIG.portalId = config.portalId;
+  if (config.formId) HUBSPOT_CONFIG.formId = config.formId;
+  // The endpoint getter in HUBSPOT_CONFIG will handle the update automatically.
+
+  // Setup main functionality
+  setupEventListeners();
+  setupGATracking();
+  showStep(1);
+
+  window.creditFormInitialized = true;
+}
+
+// Expose methods for external control (e.g., in Webflow)
 window.CreditReportForm = {
-  init: function (config = {}) {
-    // Override HubSpot config if provided
-    if (config.portalId) HUBSPOT_CONFIG.portalId = config.portalId;
-    if (config.formId) HUBSPOT_CONFIG.formId = config.formId;
-    if (config.portalId && config.formId) {
-      HUBSPOT_CONFIG.endpoint = `https://api.hsforms.com/submissions/v3/integration/submit/${config.portalId}/${config.formId}`;
-    }
+  /**
+   * Initializes the form with an optional configuration object.
+   * @param {object} config - { portalId: string, formId: string }
+   */
+  init: initializeCreditForm,
 
-    // Initialize form
-    showStep(1);
-    setupEventListeners();
-  },
+  /**
+   * Returns the current state of the form data.
+   * @returns {object}
+   */
+  getData: () => formData,
 
-  // Get current form data
-  getData: function () {
-    return formData;
-  },
-
-  // Set custom styling for Webflow
-  setWebflowMode: function () {
+  /**
+   * Applies a specific class to the body for Webflow styling overrides.
+   * This is best called from Webflow's custom code editor.
+   */
+  setWebflowMode: () => {
     document.body.classList.add("bizcred-webflow-embed");
     document.querySelector(".bizcred-form-container").classList.add("bizcred-webflow-embed");
   },
 };
 
-// Auto-initialize if not in Webflow
-if (typeof Webflow === "undefined") {
-  document.addEventListener("DOMContentLoaded", function () {
-    window.CreditReportForm.init();
-  });
+// Expose step navigation and submission functions for easy access
+window.bizCredForm = {
+  nextStep,
+  selectOption,
+  togglePlatform,
+  submitForm,
+};
+
+/**
+ * Auto-initialization logic.
+ * This robustly calls the initialization function as soon as the DOM is ready,
+ * which works for both regular and async/deferred script loading.
+ */
+function autoInit() {
+  initializeCreditForm();
+}
+
+// Check if the DOM is ready.
+if (document.readyState === "loading") {
+  // Loading hasn't finished yet, wait for the event.
+  document.addEventListener("DOMContentLoaded", autoInit);
+} else {
+  // `DOMContentLoaded` has already fired, run now.
+  autoInit();
 }

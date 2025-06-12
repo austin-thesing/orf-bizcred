@@ -4,11 +4,12 @@
   "description": "Credit report form with build process for Webflow",
   "scripts": {
     "build": "bun run build.js",
+    "build:dev": "bun run build.js --dev",
     "build:watch": "bun run build.js --watch"
   },
   "devDependencies": {
-    "html-minifier-terser": "^7.2.0",
     "clean-css": "^5.3.2",
+    "html-minifier-terser": "^7.2.0",
     "terser": "^5.24.0"
   }
 }

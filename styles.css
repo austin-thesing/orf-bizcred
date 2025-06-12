@@ -1,34 +1,21 @@
-* {
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+
+.bizcred-form-container * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 /* Import Inter font as fallback for PP Mori */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
-
-/* Root font size for rem calculations (16px base) */
-html {
-  font-size: 16px;
-}
-
-body {
-  background: #f8fafc;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.25rem;
-}
 
 .bizcred-form-container {
-  font-family: "PP Mori", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: "PP Mori", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "sans-serif";
   width: 100%;
   max-width: 28.125rem;
   margin: 0 auto;
 }
 
-.bizcred-form-wrapper {
+.bizcred-form-container .bizcred-form-wrapper {
   background: #ffffff;
   border-radius: 1.5rem;
   box-shadow: 0px 1px 1px -0.5px rgba(0, 0, 0, 0.06), 0px 3px 3px -1.5px rgba(0, 0, 0, 0.06), 0px 6px 6px -3px rgba(0, 0, 0, 0.06), 0px 12px 12px -6px rgba(0, 0, 0, 0.06), 0px 24px 24px -12px rgba(0, 0, 0, 0.06);
@@ -36,7 +23,7 @@ body {
   position: relative;
 }
 
-.bizcred-form-step {
+.bizcred-form-container .bizcred-form-step {
   display: none;
   padding: 2rem;
   min-height: 17.5rem;
@@ -44,33 +31,33 @@ body {
 }
 
 /* Step 5 specific styling to match Figma */
-#step-5 {
+.bizcred-form-container #step-5 {
   text-align: center;
 }
 
-#step-5 .bizcred-form-content {
+.bizcred-form-container #step-5 .bizcred-form-content {
   text-align: center;
 }
 
-#step-5 h2 {
+.bizcred-form-container #step-5 h2 {
   margin-top: 0.3125rem;
   margin-bottom: 2rem;
 }
 
-#step-5 .bizcred-input-group {
+.bizcred-form-container #step-5 .bizcred-input-group {
   margin-bottom: 2rem;
 }
 
-#step-5 .bizcred-submit-btn {
+.bizcred-form-container #step-5 .bizcred-submit-btn {
   margin-bottom: 0.75rem;
 }
 
 /* Step 6 (Success) specific styling to match Figma */
-#step-6 {
+.bizcred-form-container #step-6 {
   text-align: center;
 }
 
-#step-6 .bizcred-form-content {
+.bizcred-form-container #step-6 .bizcred-form-content {
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -79,20 +66,20 @@ body {
   gap: 1rem;
 }
 
-#step-6 h2 {
+.bizcred-form-container #step-6 h2 {
   margin-bottom: 0;
   max-width: 20.875rem;
 }
 
-.bizcred-form-step.bizcred-active {
+.bizcred-form-container .bizcred-form-step.bizcred-active {
   display: block;
 }
 
-.bizcred-form-content {
+.bizcred-form-container .bizcred-form-content {
   text-align: left;
 }
 
-h2 {
+.bizcred-form-container h2 {
   color: #0f3239;
   font-size: 1.25rem;
   font-weight: 600;
@@ -101,12 +88,12 @@ h2 {
   text-align: center;
 }
 
-.bizcred-input-group {
+.bizcred-form-container .bizcred-input-group {
   margin-bottom: 1.125rem;
   text-align: left;
 }
 
-.bizcred-input-row {
+.bizcred-form-container .bizcred-input-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
@@ -114,13 +101,13 @@ h2 {
 }
 
 @media (max-width: 30rem) {
-  .bizcred-input-row {
+  .bizcred-form-container .bizcred-input-row {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
 }
 
-label {
+.bizcred-form-container label {
   display: block;
   font-size: 0.6875rem;
   font-weight: 600;
@@ -129,46 +116,35 @@ label {
   text-transform: none;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="tel"],
-input[type="number"],
-select {
+.bizcred-form-container .bizcred-input {
   width: 100%;
   padding: 0.75rem 0.875rem;
-  border: 1px solid #dddddd;
+  border: 1px solid #ddd;
   border-radius: 0.5rem;
   font-size: 0.75rem;
   font-weight: 400;
-  transition: all 0.3s ease;
-  background: #ffffff;
-  height: 2.3125rem;
+  transition: 0.3s;
+  background: #fff;
+  line-height: 1.4;
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="tel"]:focus,
-input[type="number"]:focus,
-select:focus {
-  outline: none;
+.bizcred-form-container .bizcred-input:focus {
+  outline: 0;
   border-color: #645cf6;
   box-shadow: 0 0 0 0.1875rem rgba(100, 92, 246, 0.1);
 }
 
-input.bizcred-error {
+.bizcred-form-container input.bizcred-error {
   border-color: #e53e3e;
   box-shadow: 0 0 0 0.1875rem rgba(229, 62, 62, 0.1);
 }
 
-input[type="text"]::placeholder,
-input[type="email"]::placeholder,
-input[type="tel"]::placeholder,
-input[type="number"]::placeholder {
+.bizcred-form-container .bizcred-input::placeholder {
   color: #797979;
   font-weight: 400;
 }
 
-select {
+.bizcred-form-container select.bizcred-input {
   cursor: pointer;
   appearance: none;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23797979' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
@@ -178,7 +154,7 @@ select {
   padding-right: 2rem;
 }
 
-.bizcred-currency-input {
+.bizcred-form-container .bizcred-currency-input {
   position: relative;
   display: flex;
   align-items: center;
@@ -186,7 +162,7 @@ select {
   margin: 0 auto;
 }
 
-.bizcred-currency-symbol {
+.bizcred-form-container .bizcred-currency-symbol {
   position: absolute;
   left: 0.875rem;
   font-size: 0.75rem;
@@ -195,18 +171,18 @@ select {
   z-index: 1;
 }
 
-.bizcred-currency-input input {
+.bizcred-form-container .bizcred-currency-input input {
   padding-left: 2rem;
   text-align: left;
 }
 
-.bizcred-button-group {
+.bizcred-form-container .bizcred-button-group {
   display: flex;
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
-.bizcred-option-btn {
+.bizcred-form-container .bizcred-option-btn {
   flex: 1;
   padding: 1.5rem 1.25rem;
   border: 0.125rem solid rgba(0, 0, 0, 0.1);
@@ -223,30 +199,30 @@ select {
   justify-content: center;
 }
 
-.bizcred-option-btn:hover {
+.bizcred-form-container .bizcred-option-btn:hover {
   border-color: #177a33;
   background: #f8fafc;
 }
 
-.bizcred-option-btn.bizcred-selected {
+.bizcred-form-container .bizcred-option-btn.bizcred-selected {
   border-color: #177a33;
   background: #ffffff;
   color: #0f3239;
   border-width: 0.1875rem;
 }
 
-.bizcred-option-btn:not(.bizcred-selected) {
+.bizcred-form-container .bizcred-option-btn:not(.bizcred-selected) {
   opacity: 0.7;
 }
 
-.bizcred-platform-grid {
+.bizcred-form-container .bizcred-platform-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.75rem;
   margin-bottom: 1.25rem;
 }
 
-.bizcred-platform-btn {
+.bizcred-form-container .bizcred-platform-btn {
   padding: 1rem;
   border: 0.125rem solid rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
@@ -260,43 +236,44 @@ select {
   position: relative;
 }
 
-.bizcred-platform-btn img,
-.bizcred-platform-btn svg {
+.bizcred-form-container .bizcred-platform-btn img,
+.bizcred-form-container .bizcred-platform-btn svg {
   max-width: 5.25rem;
   max-height: 2rem;
   object-fit: contain;
 }
 
-.bizcred-platform-btn span {
+.bizcred-form-container .bizcred-platform-btn span {
   font-size: 0.75rem;
   font-weight: 500;
   color: #0f3239;
 }
 
-.bizcred-platform-btn:hover {
+.bizcred-form-container .bizcred-platform-btn:hover {
   border-color: #177a33;
   background: #f8fafc;
   transform: translateY(-0.0625rem);
 }
 
-.bizcred-platform-btn.bizcred-selected {
+.bizcred-form-container .bizcred-platform-btn.bizcred-selected {
   border-color: #177a33;
-  border-width: 0.1875rem;
   background: #ffffff;
   color: #0f3239;
+  border-width: 0.1875rem;
 }
 
-.bizcred-platform-btn.bizcred-selected span {
+.bizcred-form-container .bizcred-platform-btn.bizcred-selected span {
   color: #0f3239;
 }
 
-.bizcred-other-input {
+.bizcred-form-container .bizcred-other-input {
   margin-top: 0.625rem;
 }
 
-.bizcred-next-btn,
-.bizcred-submit-btn {
+.bizcred-form-container .bizcred-next-btn,
+.bizcred-form-container .bizcred-submit-btn {
   width: 100%;
+  height: 3rem;
   padding: 1rem 1.5rem;
   border: none;
   border-radius: 56.25rem;
@@ -304,55 +281,54 @@ select {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-bottom: 1rem;
-  height: 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 1rem;
 }
 
-.bizcred-next-btn {
+.bizcred-form-container .bizcred-next-btn {
   background: #645cf6;
   color: #ffffff;
 }
 
-.bizcred-submit-btn {
+.bizcred-form-container .bizcred-submit-btn {
   background: #177a33;
   color: #ffffff;
 }
 
-.bizcred-next-btn:hover {
+.bizcred-form-container .bizcred-next-btn:hover {
   transform: translateY(-0.125rem);
   box-shadow: 0 0.5rem 1.5625rem rgba(0, 0, 0, 0.15);
 }
 
-.bizcred-submit-btn:hover {
+.bizcred-form-container .bizcred-submit-btn:hover {
   background: #125a26;
   transform: translateY(-0.125rem);
   box-shadow: 0 0.5rem 1.5625rem rgba(23, 122, 51, 0.3);
 }
 
-.bizcred-next-btn:disabled,
-.bizcred-submit-btn:disabled {
+.bizcred-form-container .bizcred-next-btn:disabled,
+.bizcred-form-container .bizcred-submit-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
 }
 
-.bizcred-disclaimer {
+.bizcred-form-container .bizcred-disclaimer {
   font-size: 0.625rem;
-  color: #5e5e5e;
-  line-height: 1.4;
-  margin-top: 1rem;
-  text-align: center;
   font-weight: 400;
+  color: #5e5e5e;
+  text-align: center;
+  margin-top: 1rem;
+  line-height: 1.4;
 }
 
-.bizcred-success-icon {
+.bizcred-form-container .bizcred-success-icon {
   width: 3rem;
   height: 3rem;
-  background: rgba(118, 251, 142, 0.5);
   border-radius: 50%;
+  background: rgba(118, 251, 142, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -360,68 +336,55 @@ select {
   position: relative;
 }
 
-.bizcred-success-icon svg {
+.bizcred-form-container .bizcred-success-icon svg {
   width: 100%;
   height: 100%;
 }
 
-/* Loading state */
-.bizcred-loading {
+/* Loading spinner */
+.bizcred-form-container .bizcred-loading {
   pointer-events: none;
   opacity: 0.7;
 }
 
-.bizcred-loading::after {
+.bizcred-form-container .bizcred-loading::after {
   content: "";
   position: absolute;
   top: 50%;
   left: 50%;
+  margin-top: -0.75rem;
+  margin-left: -0.75rem;
   width: 1.5rem;
   height: 1.5rem;
-  margin: -0.75rem 0 0 -0.75rem;
-  border: 0.125rem solid transparent;
-  border-top: 0.125rem solid #667eea;
   border-radius: 50%;
+  border: 0.125rem solid rgba(0, 0, 0, 0); /* Transparent border */
+  border-top-color: #667eea; /* Loading color */
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  0% {
+  from {
     transform: rotate(0deg);
   }
-  100% {
+  to {
     transform: rotate(360deg);
   }
 }
 
-/* Responsive design */
+/* Responsive adjustments */
 @media (max-width: 30rem) {
-  .bizcred-form-step {
+  .bizcred-form-container .bizcred-form-step {
     padding: 1.875rem 1.25rem;
   }
-
-  .bizcred-platform-grid {
+  .bizcred-form-container .bizcred-platform-grid {
     grid-template-columns: 1fr;
   }
-
-  .bizcred-button-group {
+  .bizcred-form-container .bizcred-button-group {
     flex-direction: column;
   }
 }
 
-/* Webflow embed styles */
-.bizcred-webflow-embed {
-  width: 100%;
-  max-width: 28.125rem;
-  margin: 0 auto;
-}
-
-.bizcred-webflow-embed .bizcred-form-container {
-  max-width: none;
-}
-
-.bizcred-webflow-embed body {
-  background: transparent;
-  min-height: auto;
-  padding: 0;
+/* Webflow-specific override */
+body.bizcred-webflow-embed .bizcred-form-container {
+  max-width: none; /* Let Webflow's container control the width */
 }
