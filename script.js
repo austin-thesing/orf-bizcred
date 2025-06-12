@@ -478,17 +478,18 @@ async function submitForm() {
 
   try {
     const hubspotPayload = {
+      submittedAt: Date.now(),
       fields: [
-        { name: "firstname", value: formData.firstname },
-        { name: "lastname", value: formData.lastname },
-        { name: "email", value: formData.email },
-        { name: "phone", value: formData.phone },
-        { name: "company", value: formData.company },
-        { name: "federal_tax_id_available", value: formData.federal_tax_id_available },
-        { name: "ecommerce_seller", value: formData.ecommerce_seller },
-        { name: "selling_channels__c", value: formData.selling_channels__c.join(";") },
-        { name: "other_online_sales_channels", value: formData.other_online_sales_channels },
-        { name: "user_reported_monthly_revenue", value: formData.user_reported_monthly_revenue },
+        { objectTypeId: "0-1", name: "firstname", value: formData.firstname },
+        { objectTypeId: "0-1", name: "lastname", value: formData.lastname },
+        { objectTypeId: "0-1", name: "email", value: formData.email },
+        { objectTypeId: "0-1", name: "phone", value: formData.phone },
+        { objectTypeId: "0-1", name: "company", value: formData.company },
+        { objectTypeId: "0-1", name: "federal_tax_id_available", value: formData.federal_tax_id_available },
+        { objectTypeId: "0-1", name: "ecommerce_seller", value: formData.ecommerce_seller },
+        { objectTypeId: "0-1", name: "selling_channels__c", value: formData.selling_channels__c.join(";") },
+        { objectTypeId: "0-1", name: "other_online_sales_channels", value: formData.other_online_sales_channels },
+        { objectTypeId: "0-1", name: "user_reported_monthly_revenue", value: formData.user_reported_monthly_revenue },
       ],
       context: {
         hutk: getHubSpotCookie(),
@@ -497,10 +498,9 @@ async function submitForm() {
       },
     };
 
-    // Always log the payload in development for debugging
-    if (process.env.NODE_ENV === "development") {
-      console.log("Submitting to HubSpot with payload:", JSON.stringify(hubspotPayload, null, 2));
-    }
+    // Always log the payload for debugging
+    console.log("Submitting to HubSpot with payload:", JSON.stringify(hubspotPayload, null, 2));
+    console.log("HubSpot Endpoint:", HUBSPOT_CONFIG.endpoint);
 
     const response = await fetch(HUBSPOT_CONFIG.endpoint, {
       method: "POST",
@@ -510,11 +510,23 @@ async function submitForm() {
       body: JSON.stringify(hubspotPayload),
     });
 
+    console.log("HubSpot Response Status:", response.status);
+    console.log("HubSpot Response OK:", response.ok);
+
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({
-        message: `HTTP error ${response.status} with no JSON body.`,
-        errors: [],
-      }));
+      const responseText = await response.text();
+      console.error("HubSpot API Error Response Text:", responseText);
+
+      let errorData;
+      try {
+        errorData = JSON.parse(responseText);
+      } catch (e) {
+        errorData = {
+          message: `HTTP error ${response.status} with response: ${responseText}`,
+          errors: [],
+        };
+      }
+
       console.error("HubSpot API Error Response:", errorData);
 
       const validationErrors = errorData.errors?.map((err) => err.message).join(" ");
@@ -522,6 +534,10 @@ async function submitForm() {
 
       throw new Error(`HubSpot submission failed: ${errorMessage}`);
     }
+
+    // Log success response
+    const successData = await response.json();
+    console.log("HubSpot Success Response:", successData);
 
     trackFormConversion(formData);
     showStep(6);
