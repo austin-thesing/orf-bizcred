@@ -86,7 +86,7 @@ async function build() {
     // Add header comment with GitHub repo link
     const headerComment = `<!-- 
   Credit Report Form - Minified Build
-  Source repository: https://github.com/your-org/credit-report-form
+  Source repository: https://github.com/austin-thesing/orf-bizcred
   Last built: ${new Date().toISOString()}
   
   For editing this form, please see the source files in the GitHub repository above.
