@@ -128,17 +128,16 @@
   transition: 0.3s;
   background: #fff;
   line-height: 1.4;
-  /* Prevent iOS zoom */
-  transform: translateZ(0);
+  /* Prevent iOS zoom without font-size changes */
+  -webkit-text-size-adjust: 100%;
   -webkit-appearance: none;
+  -webkit-user-select: text;
 }
 
 .bizcred-form-container .bizcred-input:focus {
   outline: 0;
   border-color: #645cf6;
   box-shadow: 0 0 0 0.1875rem rgba(100, 92, 246, 0.1);
-  /* Prevent iOS zoom by temporarily setting font-size to 16px */
-  font-size: 1rem;
 }
 
 .bizcred-form-container input.bizcred-error {
